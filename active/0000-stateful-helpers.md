@@ -173,7 +173,10 @@ of the HTMLBars subexpression they are powering. For example, given a helper:
 // app/helpers/full-name.js
 import Ember from "ember";
 
-export default function full-name(params, hash, options) {
+// Note that what is called "options" in other docs is
+// called "blocks" here. This terminology should become the
+// documented norm.
+export default function full-name(params, hash, blocks) {
   return params.join(' ');
 }
 ```
@@ -215,28 +218,28 @@ written like so:
 import Ember from "ember";
 
 // Usage: {{if-is-yes 'no'}}not rendered{{else}}rendered!{{/if-is-yes}}
-export default function ifIsYes(params, hash, options) {
+export default function ifIsYes(params, hash, blocks) {
   if (params[0] === 'yes') {
-    options.template.yield();
+    blocks.template.yield();
   } else {
-    options.inverse.yield();
+    blocks.inverse.yield();
   }
 };
 ```
 
 Porting this usage to a stateful helper only changes the boilerplate:
 
-```
+```js
 // app/helpers/custom-if.js
 import Ember from "ember";
 
 // Usage: {{if-is-yes 'no'}}not rendered{{else}}rendered!{{/if-is-yes}}
 export default Ember.Helper.extend({
-  compute(params, hash, options) {
+  compute(params, hash, blocks) {
     if (params[0]) {
-      options.template.yield();
+      blocks.template.yield();
     } else {
-      options.inverse.yield();
+      blocks.inverse.yield();
     }
   }
 });
